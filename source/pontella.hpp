@@ -13,7 +13,7 @@ namespace pontella {
     /// Optionnal is an abstract class to be inherited by options and flags.
     class Optionnal {
         public:
-            Optionnal(std::string name) : Optionnal(name, std::move(name)) {}
+            Optionnal(std::string name) : Optionnal(name, name) {}
             Optionnal(std::string name, std::string alias) :
                 _name(name),
                 _alias(alias)
