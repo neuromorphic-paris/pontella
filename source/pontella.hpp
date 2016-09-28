@@ -10,89 +10,6 @@
 /// pontella is a command  line parser.
 namespace pontella {
 
-    /// Optionnal is an abstract class to be inherited by options and flags.
-    class Optionnal {
-        public:
-            Optionnal(std::string name) : Optionnal(name, std::move(name)) {}
-            Optionnal(std::string name, std::string alias) :
-                _name(name),
-                _alias(alias)
-            {
-                if (_name.empty()) {
-                    throw std::logic_error("The optionnal name cannot be empty");
-                }
-                if (_name[0] == '-') {
-                    throw std::logic_error("The optionnal name '" + _name + "' cannot start with the character '-'");
-                }
-                for (auto&& character : _name) {
-                    if (isspace(character)) {
-                        throw std::logic_error("The optionnal name '" + _name + "' cannot contain white-space characters");
-                    }
-                    if (character == '=') {
-                        throw std::logic_error("The optionnal name '" + _name + "' cannot contain the character '='");
-                    }
-                }
-                if (_alias.empty()) {
-                    throw std::logic_error("The optionnal alias cannot be empty");
-                }
-                if (_alias[0] == '-') {
-                    throw std::logic_error("The optionnal alias '" + _alias + "' cannot start with the character '-'");
-                }
-                for (auto&& character : _alias) {
-                    if (isspace(character)) {
-                        throw std::logic_error("The optionnal alias '" + _alias + "' cannot contain white-space characters");
-                    }
-                    if (character == '=') {
-                        throw std::logic_error("The optionnal alias '" + _alias + "' cannot contain the character '='");
-                    }
-                }
-            }
-            Optionnal(const Optionnal&) = default;
-            Optionnal(Optionnal&&) = default;
-            Optionnal& operator=(const Optionnal&) = default;
-            Optionnal& operator=(Optionnal&&) = default;
-            virtual ~Optionnal() {}
-
-            /// name returns the option name.
-            const std::string& name() const {
-                return _name;
-            }
-
-            /// alias returns the option alias (shorter than the name).
-            const std::string& alias() const {
-                return _alias;
-            }
-
-        protected:
-            std::string _name;
-            std::string _alias;
-    };
-
-    /// Option represents a named command line option expecting an argument.
-    class Option : public Optionnal {
-        public:
-            Option(std::string name) : Optionnal(std::move(name)) {}
-            Option(std::string name, std::string alias) : Optionnal(std::move(name), std::move(alias)) {}
-            Option(const Option&) = default;
-            Option(Option&&) = default;
-            Option& operator=(const Option&) = default;
-            Option& operator=(Option&&) = default;
-            virtual ~Option() {}
-    };
-
-
-    /// Flag represents a named command line option without argument.
-    class Flag : public Optionnal {
-        public:
-            Flag(std::string name) : Optionnal(std::move(name)) {}
-            Flag(std::string name, std::string alias) : Optionnal(std::move(name), std::move(alias)) {}
-            Flag(const Flag&) = default;
-            Flag(Flag&&) = default;
-            Flag& operator=(const Flag&) = default;
-            Flag& operator=(Flag&&) = default;
-            virtual ~Flag() {}
-    };
-
     /// Command contains parsed arguments, options and flags.
     struct Command {
 
@@ -108,30 +25,86 @@ namespace pontella {
 
     /// parse turns argc and argv into parsed arguments and options.
     /// If numberOfArguments is negative, the number of arguments is unlimited.
-    Command parse(int argc, char* argv[], int64_t numberOfArguments, std::initializer_list<Option> options, std::initializer_list<Flag> flags) {
-        auto optionnalByName = std::unordered_map<std::string, std::reference_wrapper<const Optionnal>>();
+    Command parse(
+        int argc,
+        char* argv[],
+        int64_t numberOfArguments,
+        std::initializer_list<std::initializer_list<std::string>> options,
+        std::initializer_list<std::initializer_list<std::string>> flags
+    ) {
+        auto isOptionByName = std::unordered_map<std::string, bool>();
         auto nameByAlias = std::unordered_map<std::string, std::string>();
-        auto optionsNames = std::unordered_set<std::string>();
         for (auto&& option : options) {
-            if (optionnalByName.find(option.name()) != optionnalByName.end()) {
-                throw std::logic_error("Duplicated optionnal name '" + option.name() + "'");
+            if (option.size() == 0) {
+                throw std::logic_error("An option cannot be empty");
             }
-            optionnalByName.insert(std::make_pair(option.name(), std::ref(option)));
-            if (nameByAlias.find(option.alias()) != nameByAlias.end()) {
-                throw std::logic_error("Duplicated optionnal alias '" + option.alias() + "'");
+            for (auto&& nameOrAlias : option) {
+                if (nameOrAlias.empty()) {
+                    throw std::logic_error("An option name or alias cannot be empty");
+                }
+                if (nameOrAlias[0] == '-') {
+                    throw std::logic_error("The option name or alias '" + nameOrAlias + "' cannot start with the charcater '-'");
+                }
+                for (auto&& character : nameOrAlias) {
+                    if (isspace(character)) {
+                        throw std::logic_error("The option name or alias '" + nameOrAlias + "' cannot contain white-space characters");
+                    }
+                    if (character == '=') {
+                        throw std::logic_error("The option name or alias '" + nameOrAlias + "' cannot contain the character '='");
+                    }
+                }
             }
-            nameByAlias.insert(std::make_pair(option.alias(), option.name()));
-            optionsNames.insert(option.name());
+            {
+                const auto inserter = isOptionByName.insert(std::make_pair(*option.begin(), true));
+                if (!inserter.second) {
+                    throw std::logic_error("Duplicated option name '" + *option.begin() + "'");
+                }
+            }
+            for (auto aliasIterator = std::next(option.begin()); aliasIterator != option.end(); ++aliasIterator) {
+                if (isOptionByName.find(*aliasIterator) != isOptionByName.end()) {
+                    throw std::logic_error("Duplicated option name or alias '" + *aliasIterator + "'");
+                }
+                const auto inserter = nameByAlias.insert(std::make_pair(*aliasIterator, *option.begin()));
+                if (!inserter.second) {
+                    throw std::logic_error("Duplciated option alias '" + *aliasIterator + "'");
+                }
+            }
         }
         for (auto&& flag : flags) {
-            if (optionnalByName.find(flag.name()) != optionnalByName.end()) {
-                throw std::logic_error("Duplicated optionnal name '" + flag.name() + "'");
+            if (flag.size() == 0) {
+                throw std::logic_error("An flag cannot be empty");
             }
-            optionnalByName.insert(std::make_pair(flag.name(), std::ref(flag)));
-            if (nameByAlias.find(flag.alias()) != nameByAlias.end()) {
-                throw std::logic_error("Duplicated optionnal alias '" + flag.alias() + "'");
+            for (auto&& nameOrAlias : flag) {
+                if (nameOrAlias.empty()) {
+                    throw std::logic_error("An flag name or alias cannot be empty");
+                }
+                if (nameOrAlias[0] == '-') {
+                    throw std::logic_error("The flag name or alias '" + nameOrAlias + "' cannot start with the charcater '-'");
+                }
+                for (auto&& character : nameOrAlias) {
+                    if (isspace(character)) {
+                        throw std::logic_error("The flag name or alias '" + nameOrAlias + "' cannot contain white-space characters");
+                    }
+                    if (character == '=') {
+                        throw std::logic_error("The flag name or alias '" + nameOrAlias + "' cannot contain the character '='");
+                    }
+                }
             }
-            nameByAlias.insert(std::make_pair(flag.alias(), flag.name()));
+            {
+                const auto inserter = isOptionByName.insert(std::make_pair(*flag.begin(), false));
+                if (!inserter.second) {
+                    throw std::logic_error("Duplicated flag name '" + *flag.begin() + "'");
+                }
+            }
+            for (auto aliasIterator = std::next(flag.begin()); aliasIterator != flag.end(); ++aliasIterator) {
+                if (isOptionByName.find(*aliasIterator) != isOptionByName.end()) {
+                    throw std::logic_error("Duplicated flag name or alias '" + *aliasIterator + "'");
+                }
+                const auto inserter = nameByAlias.insert(std::make_pair(*aliasIterator, *flag.begin()));
+                if (!inserter.second) {
+                    throw std::logic_error("Duplciated flag alias '" + *aliasIterator + "'");
+                }
+            }
         }
 
         auto command = Command{{}, {}, {}};
@@ -155,7 +128,7 @@ namespace pontella {
                     }
                 }
 
-                auto nameAndOptionnal = optionnalByName.end();
+                auto nameAndIsOption = isOptionByName.end();
                 auto parameter = std::string();
                 auto hasEqual = false;
                 {
@@ -173,32 +146,31 @@ namespace pontella {
                             parameter = std::string(argv[index + 1]);
                         }
                     }
-                    const auto nameAndOptionnalCandidate = optionnalByName.find(nameOrAlias);
-                    if (nameAndOptionnalCandidate == optionnalByName.end()) {
+                    const auto nameAndIsOptionCandidate = isOptionByName.find(nameOrAlias);
+                    if (nameAndIsOptionCandidate == isOptionByName.end()) {
                         const auto aliasAndNameCandidate = nameByAlias.find(nameOrAlias);
                         if (aliasAndNameCandidate == nameByAlias.end()) {
                             throw std::runtime_error("Unknown option name or alias '" + nameOrAlias + "'");
                         }
-                        nameAndOptionnal = optionnalByName.find(aliasAndNameCandidate->second);
+                        nameAndIsOption = isOptionByName.find(aliasAndNameCandidate->second);
                     } else {
-                        nameAndOptionnal = nameAndOptionnalCandidate;
+                        nameAndIsOption = nameAndIsOptionCandidate;
                     }
                 }
 
-                if (optionsNames.find(nameAndOptionnal->second.get().name()) == optionsNames.end()) {
-                    if (hasEqual) {
-                        throw std::runtime_error("The flag '" + nameAndOptionnal->second.get().name() + "' does not take a parameter");
-                    }
-                    command.flags.insert(nameAndOptionnal->second.get().name());
-                } else {
+                if (nameAndIsOption->second) {
                     if (!hasEqual) {
                         if (index == argc - 1) {
-                            throw std::runtime_error("The option '" + nameAndOptionnal->second.get().name() + "' requires a parameter");
+                            throw std::runtime_error("The option '" + nameAndIsOption->first + "' requires a parameter");
                         }
                         ++index;
                     }
-                    command.options.insert(std::make_pair(nameAndOptionnal->second.get().name(), parameter));
-
+                    command.options.insert(std::make_pair(nameAndIsOption->first, parameter));
+                } else {
+                    if (hasEqual) {
+                        throw std::runtime_error("The flag '" + nameAndIsOption->first + "' does not take a parameter");
+                    }
+                    command.flags.insert(nameAndIsOption->first);
                 }
             } else {
                 if (numberOfArguments >= 0 && command.arguments.size() >= numberOfArguments) {
@@ -216,9 +188,35 @@ namespace pontella {
 
     /// test determines wether the given flag was used.
     /// It is meant to be used to hide the error message when a specific flag (such as help) is given.
-    bool test(int argc, char* argv[], Flag flag) {
+    /// This method does not work with options.
+    bool test(int argc, char* argv[], std::initializer_list<std::string> flag) {
+        auto patterns = std::unordered_set<std::string>();
+        if (flag.size() == 0) {
+            throw std::logic_error("An flag cannot be empty");
+        }
+        for (auto&& nameOrAlias : flag) {
+            if (nameOrAlias.empty()) {
+                throw std::logic_error("An flag name or alias cannot be empty");
+            }
+            if (nameOrAlias[0] == '-') {
+                throw std::logic_error("The flag name or alias '" + nameOrAlias + "' cannot start with the charcater '-'");
+            }
+            for (auto&& character : nameOrAlias) {
+                if (isspace(character)) {
+                    throw std::logic_error("The flag name or alias '" + nameOrAlias + "' cannot contain white-space characters");
+                }
+                if (character == '=') {
+                    throw std::logic_error("The flag name or alias '" + nameOrAlias + "' cannot contain the character '='");
+                }
+            }
+            for (auto&& prefix : std::initializer_list<std::string>({"-", "--"})) {
+                const auto inserter = patterns.insert(prefix + nameOrAlias);
+                if (!inserter.second) {
+                    throw std::logic_error("Duplicated flag name or alias '" + nameOrAlias + "'");
+                }
+            }
+        }
         auto found = false;
-        auto patterns = std::unordered_set<std::string>({"--" + flag.name(), "-" + flag.name(), "--" + flag.alias(), "-" + flag.alias()});
         for (auto index = 1; index < argc; ++index) {
             if (patterns.find(std::string(argv[index])) != patterns.end()) {
                 found = true;

@@ -2,31 +2,6 @@
 
 #include "../source/pontella.hpp"
 
-TEST_CASE("Build an option", "[Option]") {
-    REQUIRE_NOTHROW(pontella::Option("help", "h"));
-    REQUIRE_NOTHROW(pontella::Option("help"));
-    REQUIRE_NOTHROW(pontella::Option("help-me", "h"));
-    REQUIRE_NOTHROW(pontella::Option("help", "h-m"));
-    REQUIRE_THROWS(pontella::Option("--help", "h"));
-    REQUIRE_THROWS(pontella::Option("help", "-h"));
-    REQUIRE_THROWS(pontella::Option("he=lp", "h"));
-    REQUIRE_THROWS(pontella::Option("help", "h="));
-    REQUIRE_THROWS(pontella::Option("help", ""));
-    REQUIRE_THROWS(pontella::Option(""));
-    REQUIRE_THROWS(pontella::Option("", "h"));
-    REQUIRE_NOTHROW(pontella::Flag("help", "h"));
-    REQUIRE_NOTHROW(pontella::Flag("help"));
-    REQUIRE_NOTHROW(pontella::Flag("help-me", "h"));
-    REQUIRE_NOTHROW(pontella::Flag("help", "h-m"));
-    REQUIRE_THROWS(pontella::Flag("--help", "h"));
-    REQUIRE_THROWS(pontella::Flag("help", "-h"));
-    REQUIRE_THROWS(pontella::Flag("he=lp", "h"));
-    REQUIRE_THROWS(pontella::Flag("help", "h="));
-    REQUIRE_THROWS(pontella::Flag("help", ""));
-    REQUIRE_THROWS(pontella::Flag(""));
-    REQUIRE_THROWS(pontella::Flag("", "h"));
-}
-
 TEST_CASE("Parse a valid command line", "[parse]") {
     for (auto&& firstOptionParts : std::vector<std::vector<const char*>>({
         {"--verbose=1"},
@@ -173,10 +148,10 @@ TEST_CASE("Fail on unexpected characters", "[parse]") {
 TEST_CASE("Test a command line for a flag", "[test]") {
     for (auto&& option : std::vector<const char*>({"--help", "-help", "--h", "-h"})) {
         auto arguments = std::vector<const char*>({"./program", option});
-        REQUIRE(pontella::test(static_cast<int>(arguments.size()), const_cast<char**>(arguments.data()), pontella::Flag("help", "h")));
+        REQUIRE(pontella::test(static_cast<int>(arguments.size()), const_cast<char**>(arguments.data()), {"help", "h"}));
     }
     for (auto&& option : std::vector<const char*>({"--help", "-help", "--h", "-h"})) {
         auto arguments = std::vector<const char*>({"./program", option});
-        REQUIRE(!pontella::test(static_cast<int>(arguments.size()), const_cast<char**>(arguments.data()), pontella::Flag("verbose", "v")));
+        REQUIRE(!pontella::test(static_cast<int>(arguments.size()), const_cast<char**>(arguments.data()), {"verbose", "v"}));
     }
 }
