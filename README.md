@@ -108,7 +108,7 @@ int main(int argc, char* argv[]) {
 }
 ```
 
-`pontella::parse` may throw to kind of exceptions: `std::logic_error` are thrown when the options and flags chosen by the programer are not valid, whereas `std::runtime_error` are thrown when the arguments given by the user do not match the options and flags.
+`pontella::parse` may throw two kind of exceptions: `std::logic_error` are thrown when the options and flags chosen by the programer are not valid, whereas `std::runtime_error` are thrown when the arguments given by the user do not match the options and flags.
 
 Pontella authorizes the following syntaxes for options:
 - `./fileOpener /path/to/file --help --verbose 1`
