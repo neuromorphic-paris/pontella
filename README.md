@@ -111,28 +111,28 @@ int main(int argc, char* argv[]) {
 `pontella::parse` may throw two kind of exceptions: `std::logic_error` are thrown when the options and flags chosen by the programer are not valid, whereas `std::runtime_error` are thrown when the arguments given by the user do not match the options and flags.
 
 Pontella authorizes the following syntaxes for options:
-- `./fileOpener /path/to/file --help --verbose 1`
-- `./fileOpener /path/to/file --help --verbose=1`
-- `./fileOpener /path/to/file --help -verbose 1`
-- `./fileOpener /path/to/file --help -verbose=1`
-- `./fileOpener /path/to/file --help --v 1`
-- `./fileOpener /path/to/file --help --v=1`
-- `./fileOpener /path/to/file --help -v 1`
-- `./fileOpener /path/to/file --help -v=1`
+  - `./fileOpener /path/to/file --help --verbose 1`
+  - `./fileOpener /path/to/file --help --verbose=1`
+  - `./fileOpener /path/to/file --help -verbose 1`
+  - `./fileOpener /path/to/file --help -verbose=1`
+  - `./fileOpener /path/to/file --help --v 1`
+  - `./fileOpener /path/to/file --help --v=1`
+  - `./fileOpener /path/to/file --help -v 1`
+  - `./fileOpener /path/to/file --help -v=1`
 
 Pontella authorizes the following syntaxes for flags:
-- `./fileOpener /path/to/file --help --verbose 1`
-- `./fileOpener /path/to/file -help --verbose 1`
-- `./fileOpener /path/to/file --h --verbose 1`
-- `./fileOpener /path/to/file -h --verbose 1`
+  - `./fileOpener /path/to/file --help --verbose 1`
+  - `./fileOpener /path/to/file -help --verbose 1`
+  - `./fileOpener /path/to/file --h --verbose 1`
+  - `./fileOpener /path/to/file -h --verbose 1`
 
 All the positions for options and flags are possible:
-- `./fileOpener /path/to/file --help --verbose 1`
-- `./fileOpener /path/to/file --verbose 1 --help`
-- `./fileOpener --help /path/to/file --verbose 1`
-- `./fileOpener --help --verbose 1 /path/to/file`
-- `./fileOpener --verbose 1 /path/to/file --help`
-- `./fileOpener --verbose 1 --help /path/to/file`
+  - `./fileOpener /path/to/file --help --verbose 1`
+  - `./fileOpener /path/to/file --verbose 1 --help`
+  - `./fileOpener --help /path/to/file --verbose 1`
+  - `./fileOpener --help --verbose 1 /path/to/file`
+  - `./fileOpener --verbose 1 /path/to/file --help`
+  - `./fileOpener --verbose 1 --help /path/to/file`
 
 Here is an extensive example with error handling:
 ```cpp
