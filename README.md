@@ -66,7 +66,7 @@ namespace pontella {
 
 - `argc` is the program's `argc` given to the main function.
 - `argv` is the program's `argv` given to the main function.
-- `numberOfArguments` is the expected number of positionnal arguments. If the incorrect number of arguments is passed to the program, `pontella::parse` will throw an exception. To allow any number of arguments, set `numberOfArguments` to `-1`.
+- `numberOfArguments` is the expected number of positional arguments. If the incorrect number of arguments is passed to the program, `pontella::parse` will throw an exception. To allow any number of arguments, set `numberOfArguments` to `-1`.
 - `options` lists the available options (named arguments with a parameter) and their aliases (each option can have any number of aliases).
 - `flags` lists the available flags (named arguments without parameter) and their aliases (each flag can have any number of aliases).
 
@@ -77,7 +77,7 @@ namespace pontella {
     /// Command contains parsed arguments, options and flags.
     struct Command {
 
-        /// arguments contains the positionnal arguments given to the program.
+        /// arguments contains the positional arguments given to the program.
         std::vector<std::string> arguments;
 
         /// options contains the named options and the associated parameter given to the program.

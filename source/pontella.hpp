@@ -138,6 +138,7 @@ namespace pontella {
                             hasEqual = true;
                             nameOrAlias = std::string(nameOrAliasAndParameter.begin(), characterIterator);
                             parameter = std::string(std::next(characterIterator), nameOrAliasAndParameter.end());
+                            break;
                         }
                     }
                     if (!hasEqual) {
