@@ -6,7 +6,7 @@ solution 'pontella'
         trigger = "install",
         description = "Install the library",
         execute = function ()
-            os.copyfile('source/pontella.hpp /usr/local/include/pontella.hpp')
+            os.copyfile('source/pontella.hpp', '/usr/local/include/pontella.hpp')
 
             print(string.char(27) .. '[32mPontella library installed.' .. string.char(27) .. '[0m')
             os.exit()
