@@ -44,10 +44,10 @@ solution 'pontella'
         configuration 'linux'
             buildoptions {'-std=c++11'}
             linkoptions {'-std=c++11'}
-            postbuildcommands {'cp ../source/pontella.hpp /usr/local/include/pontella.hpp')}
+            postbuildcommands {'cp ../source/pontella.hpp /usr/local/include/pontella.hpp'}
 
         -- Mac OS X specific settings
         configuration 'macosx'
             buildoptions {'-std=c++11', '-stdlib=libc++'}
             linkoptions {'-std=c++11', '-stdlib=libc++'}
-            postbuildcommands {'cp ../source/pontella.hpp /usr/local/include/pontella.hpp')}
+            postbuildcommands {'cp ../source/pontella.hpp /usr/local/include/pontella.hpp'}
