@@ -29,7 +29,7 @@ To uninstall the library, run `premake4 uninstall` from the *pontella* directory
 ## Test
 
 To test the library, run the following commands:
-  - Go to the *pontella* directory and run `premake4 gmake && cd build && make`. Use `premake4 --icc gmake` instead to use the Intel c++ compiler.
+  - Go to the *pontella* directory and run `premake4 gmake && cd build && make`.
   - Run the executable *Release/pontellaTest*.
 
 ## Documentation
