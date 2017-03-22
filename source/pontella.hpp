@@ -107,7 +107,7 @@ namespace pontella {
             }
         }
 
-        auto command = Command{{}, {}, {}};
+        auto command = Command{};
 
         for (auto index = 1; index < argc; ++index) {
             const auto element = std::string(argv[index]);
