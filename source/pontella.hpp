@@ -34,18 +34,18 @@ namespace pontella {
     ) {
         auto isOptionByName = std::unordered_map<std::string, bool>();
         auto nameByAlias = std::unordered_map<std::string, std::string>();
-        for (auto&& option : options) {
+        for (const auto& option : options) {
             if (option.size() == 0) {
                 throw std::logic_error("An option cannot be empty");
             }
-            for (auto&& nameOrAlias : option) {
+            for (const auto& nameOrAlias : option) {
                 if (nameOrAlias.empty()) {
                     throw std::logic_error("An option name or alias cannot be empty");
                 }
                 if (nameOrAlias[0] == '-') {
                     throw std::logic_error("The option name or alias '" + nameOrAlias + "' cannot start with the charcater '-'");
                 }
-                for (auto&& character : nameOrAlias) {
+                for (auto character : nameOrAlias) {
                     if (isspace(character)) {
                         throw std::logic_error("The option name or alias '" + nameOrAlias + "' cannot contain white-space characters");
                     }
@@ -70,18 +70,18 @@ namespace pontella {
                 }
             }
         }
-        for (auto&& flag : flags) {
+        for (const auto& flag : flags) {
             if (flag.size() == 0) {
                 throw std::logic_error("An flag cannot be empty");
             }
-            for (auto&& nameOrAlias : flag) {
+            for (const auto& nameOrAlias : flag) {
                 if (nameOrAlias.empty()) {
                     throw std::logic_error("An flag name or alias cannot be empty");
                 }
                 if (nameOrAlias[0] == '-') {
                     throw std::logic_error("The flag name or alias '" + nameOrAlias + "' cannot start with the charcater '-'");
                 }
-                for (auto&& character : nameOrAlias) {
+                for (auto character : nameOrAlias) {
                     if (isspace(character)) {
                         throw std::logic_error("The flag name or alias '" + nameOrAlias + "' cannot contain white-space characters");
                     }
@@ -195,14 +195,14 @@ namespace pontella {
         if (flag.size() == 0) {
             throw std::logic_error("An flag cannot be empty");
         }
-        for (auto&& nameOrAlias : flag) {
+        for (const auto& nameOrAlias : flag) {
             if (nameOrAlias.empty()) {
                 throw std::logic_error("An flag name or alias cannot be empty");
             }
             if (nameOrAlias[0] == '-') {
                 throw std::logic_error("The flag name or alias '" + nameOrAlias + "' cannot start with the charcater '-'");
             }
-            for (auto&& character : nameOrAlias) {
+            for (const auto& character : nameOrAlias) {
                 if (isspace(character)) {
                     throw std::logic_error("The flag name or alias '" + nameOrAlias + "' cannot contain white-space characters");
                 }
@@ -210,7 +210,7 @@ namespace pontella {
                     throw std::logic_error("The flag name or alias '" + nameOrAlias + "' cannot contain the character '='");
                 }
             }
-            for (auto&& prefix : std::initializer_list<std::string>({"-", "--"})) {
+            for (const auto& prefix : std::initializer_list<std::string>({"-", "--"})) {
                 const auto inserter = patterns.insert(prefix + nameOrAlias);
                 if (!inserter.second) {
                     throw std::logic_error("Duplicated flag name or alias '" + nameOrAlias + "'");
