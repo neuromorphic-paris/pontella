@@ -26,16 +26,9 @@ before_install:
             sudo chown -R `whoami` /usr/local
         fi
 
-before_script:
-    - premake4 install
-
 script:
     - premake4 gmake
     - cd build
     - make
-    - cd Release
-    - ./pontellaTest
-    - cd ../../
-
-after_script:
-    - premake4 uninstall
+    - cd release
+    - ./test
