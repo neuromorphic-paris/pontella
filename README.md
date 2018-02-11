@@ -129,7 +129,9 @@ int main(int argc, char* argv[]) {
         0,
         {},
         {},
-        [](pontella::command) -> int { return 0; });
+        [](pontella::command command) {
+            // your application goes there
+        });
 }
 ```
 
@@ -155,7 +157,7 @@ namespace pontella {
 - `number_of_arguments` is the expected number of positional arguments. If the incorrect number of arguments is passed to the program, `pontella::parse` will throw an exception. To allow any number of arguments, set `number_of_arguments` to `-1`.
 - `options` lists the available options (named arguments with a parameter) and their aliases (each option can have any number of aliases).
 - `flags` lists the available flags (named arguments without parameter) and their aliases (each flag can have any number of aliases). The flag `help` (with alias `h`) is added internally before calling `pontella::parse`.
-- `handle_command` must be compatible with the expression `handle_command(pontella::command)` returning an `int`.
+- `handle_command` must be compatible with the expression `handle_command(pontella::command)`.
 
 More control can be achieved with manual error handling:
 ```cpp
