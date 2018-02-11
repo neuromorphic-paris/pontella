@@ -188,7 +188,7 @@ TEST_CASE("Test the main wrapper", "[main]") {
                 0,
                 {},
                 {},
-                [](pontella::command) -> int { return 0; })
+                [](pontella::command) {})
             == 0);
     }
     for (const auto& option : {"--help", "-help", "--h", "-h"}) {
@@ -201,7 +201,7 @@ TEST_CASE("Test the main wrapper", "[main]") {
                 0,
                 {},
                 {},
-                [](pontella::command) -> int { return 0; })
+                [](pontella::command) {})
             == 1);
     }
     {
@@ -214,9 +214,8 @@ TEST_CASE("Test the main wrapper", "[main]") {
                 0,
                 {},
                 {},
-                [](pontella::command) -> int {
+                [](pontella::command) {
                     throw std::runtime_error("This program always errors");
-                    return 0;
                 })
             == 1);
     }

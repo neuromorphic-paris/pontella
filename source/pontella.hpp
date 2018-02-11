@@ -242,7 +242,8 @@ namespace pontella {
             const auto command =
                 parse(argc, argv, number_of_arguments, options, flags_with_help.begin(), flags_with_help.end());
             if (command.flags.find("help") == command.flags.end()) {
-                return handle_command(command);
+                handle_command(command);
+                return 0;
             }
         } catch (const std::exception& exception) {
             if (!test(argc, argv, help)) {
