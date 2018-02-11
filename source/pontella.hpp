@@ -12,8 +12,8 @@
 /// pontella is a command  line parser.
 namespace pontella {
 
-    /// command_t contains parsed arguments, options and flags.
-    struct command_t {
+    /// command contains parsed arguments, options and flags.
+    struct command {
         /// arguments contains the positionnal arguments given to the program.
         std::vector<std::string> arguments;
 
@@ -24,8 +24,8 @@ namespace pontella {
         std::unordered_set<std::string> flags;
     };
 
-    /// label_t represents an option or flag name, and its aliases.
-    struct label_t {
+    /// label represents an option or flag name, and its aliases.
+    struct label {
         std::string name;
         std::unordered_set<std::string> aliases;
     };
@@ -54,7 +54,7 @@ namespace pontella {
     /// parse turns argc and argv into parsed arguments and options.
     /// If number_of_arguments is negative, the number of arguments is unlimited.
     template <typename option_iterator, typename flag_iterator>
-    inline command_t parse(
+    inline command parse(
         int argc,
         char* argv[],
         int64_t number_of_arguments,
@@ -94,7 +94,7 @@ namespace pontella {
                 }
             }
         }
-        command_t command;
+        command command;
         for (auto index = 1; index < argc; ++index) {
             const std::string element(argv[index]);
             if (element[0] == '-') {
@@ -175,37 +175,37 @@ namespace pontella {
         return command;
     }
     template <typename option_iterator>
-    inline command_t parse(
+    inline command parse(
         int argc,
         char* argv[],
         int64_t number_of_arguments,
         option_iterator options_begin,
         option_iterator options_end,
-        std::initializer_list<label_t> flags) {
+        std::initializer_list<label> flags) {
         return parse(argc, argv, number_of_arguments, options_begin, options_end, flags.begin(), flags.end());
     }
     template <typename flag_iterator>
-    inline command_t parse(
+    inline command parse(
         int argc,
         char* argv[],
         int64_t number_of_arguments,
-        std::initializer_list<label_t> options,
+        std::initializer_list<label> options,
         flag_iterator flags_begin,
         flag_iterator flags_end) {
         return parse(argc, argv, number_of_arguments, options.begin(), options.end(), flags_begin, flags_end);
     }
-    inline command_t parse(
+    inline command parse(
         int argc,
         char* argv[],
         int64_t number_of_arguments,
-        std::initializer_list<label_t> options,
-        std::initializer_list<label_t> flags) {
+        std::initializer_list<label> options,
+        std::initializer_list<label> flags) {
         return parse(argc, argv, number_of_arguments, options.begin(), options.end(), flags.begin(), flags.end());
     }
 
     /// test determines wether the given flag was used.
     /// It can be used to hide the error message when a specific flag is present.
-    inline bool test(int argc, char* argv[], const label_t& flag) {
+    inline bool test(int argc, char* argv[], const label& flag) {
         std::unordered_set<std::string> patterns;
         validate(flag.name, false, true);
         patterns.insert(std::string("-") + flag.name);
@@ -226,18 +226,18 @@ namespace pontella {
     }
 
     /// main wraps error handling and message display.
-    template <typename handle_command_t>
+    template <typename HandleCommand>
     inline int main(
         std::initializer_list<std::string> lines,
         int argc,
         char* argv[],
         int64_t number_of_arguments,
-        std::initializer_list<label_t> options,
-        std::initializer_list<label_t> flags,
-        handle_command_t handle_command) {
-        const label_t help{"help", {"h"}};
+        std::initializer_list<label> options,
+        std::initializer_list<label> flags,
+        HandleCommand handle_command) {
+        const label help{"help", {"h"}};
         try {
-            std::vector<label_t> flags_with_help(flags);
+            std::vector<label> flags_with_help(flags);
             flags_with_help.push_back(help);
             const auto command =
                 parse(argc, argv, number_of_arguments, options, flags_with_help.begin(), flags_with_help.end());
