@@ -29,12 +29,12 @@ The function `pontella::parse` has the signature:
 namespace pontella {
     /// parse turns argc and argv into parsed arguments and options.
     /// If numberOfArguments is negative, the number of arguments is unlimited.
-    command_t parse(
+    command parse(
         int argc,
         char* argv[],
         int64_t number_of_arguments,
-        std::initializer_list<label_t> options,
-        std::initializer_list<label_t> flags);
+        std::initializer_list<label> options,
+        std::initializer_list<label> flags);
 }
 ```
 
@@ -44,22 +44,22 @@ namespace pontella {
 - `options` lists the available options (named arguments with a parameter) and their aliases (each option can have any number of aliases).
 - `flags` lists the available flags (named arguments without parameter) and their aliases (each flag can have any number of aliases).
 
-The type `pontella::label_t` represents an option or a flag, and is defined as:
+The type `pontella::label` represents an option or a flag, and is defined as:
 ```cpp
 namespace pontella {
-    /// label_t represents an option or flag name, and its aliases.
-    struct label_t {
+    /// label represents an option or flag name, and its aliases.
+    struct label {
         std::string name;
         std::unordered_set<std::string> aliases;
     };
 }
 ```
 
-The returned `pontella::command_t` is defined by:
+The returned `pontella::command` is defined by:
 ```cpp
 namespace pontella {
-    /// command_t contains parsed arguments, options and flags.
-    struct command_t {
+    /// command contains parsed arguments, options and flags.
+    struct command {
 
         /// arguments contains the positional arguments given to the program.
         std::vector<std::string> arguments;
@@ -129,7 +129,7 @@ int main(int argc, char* argv[]) {
         0,
         {},
         {},
-        [](pontella::command_t) -> int { return 0; });
+        [](pontella::command) -> int { return 0; });
 }
 ```
 
@@ -137,15 +137,15 @@ The `pontella::main` function has the signature:
 ```cpp
 namespace pontella {
     /// main wraps error handling and message display.
-    template <typename handle_command_t>
+    template <typename HandleCommand>
     inline int main(
         std::initializer_list<std::string> lines,
         int argc,
         char* argv[],
         int64_t number_of_arguments,
-        std::initializer_list<label_t> options,
-        std::initializer_list<label_t> flags,
-        handle_command_t handle_command);
+        std::initializer_list<label> options,
+        std::initializer_list<label> flags,
+        HandleCommand handle_command);
 }
 ```
 
@@ -155,14 +155,14 @@ namespace pontella {
 - `number_of_arguments` is the expected number of positional arguments. If the incorrect number of arguments is passed to the program, `pontella::parse` will throw an exception. To allow any number of arguments, set `number_of_arguments` to `-1`.
 - `options` lists the available options (named arguments with a parameter) and their aliases (each option can have any number of aliases).
 - `flags` lists the available flags (named arguments without parameter) and their aliases (each flag can have any number of aliases). The flag `help` (with alias `h`) is added internally before calling `pontella::parse`.
-- `handle_command` must be compatible with the expression `handle_command(pontella::command_t)` returning an `int`.
+- `handle_command` must be compatible with the expression `handle_command(pontella::command)` returning an `int`.
 
 More control can be achieved with manual error handling:
 ```cpp
 #include "../third_party/pontella/source/pontella.hpp"
 
 int main(int argc, char* argv[]) {
-    pontella::label_t help{"help", {"h"}};
+    pontella::label help{"help", {"h"}};
     auto show_help = false;
     try {
         const auto command = pontella::parse(argc, argv, 1, {{"verbose", {"v"}}}, {help});
@@ -198,7 +198,7 @@ namespace pontella {
     /// test determines wether the given flag was used.
     /// It is meant to be used to hide the error message when a specific flag (such as help) is given.
     /// This method does not work with options.
-    bool test(int argc, char* argv[], const label_t& flag);
+    bool test(int argc, char* argv[], const label& flag);
 }
 ```
 
