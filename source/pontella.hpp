@@ -53,15 +53,15 @@ namespace pontella {
 
     /// parse turns argc and argv into parsed arguments and options.
     /// If number_of_arguments is negative, the number of arguments is unlimited.
-    template <typename option_iterator, typename flag_iterator>
+    template <typename OptionIterator, typename FlagIterator>
     inline command parse(
         int argc,
         char* argv[],
         int64_t number_of_arguments,
-        option_iterator options_begin,
-        option_iterator options_end,
-        flag_iterator flags_begin,
-        flag_iterator flags_end) {
+        OptionIterator options_begin,
+        OptionIterator options_end,
+        FlagIterator flags_begin,
+        FlagIterator flags_end) {
         std::unordered_map<std::string, bool> name_to_is_option;
         std::unordered_map<std::string, std::string> alias_to_name;
         for (; options_begin != options_end; ++options_begin) {
@@ -174,24 +174,24 @@ namespace pontella {
         }
         return command;
     }
-    template <typename option_iterator>
+    template <typename OptionIterator>
     inline command parse(
         int argc,
         char* argv[],
         int64_t number_of_arguments,
-        option_iterator options_begin,
-        option_iterator options_end,
+        OptionIterator options_begin,
+        OptionIterator options_end,
         std::initializer_list<label> flags) {
         return parse(argc, argv, number_of_arguments, options_begin, options_end, flags.begin(), flags.end());
     }
-    template <typename flag_iterator>
+    template <typename FlagIterator>
     inline command parse(
         int argc,
         char* argv[],
         int64_t number_of_arguments,
         std::initializer_list<label> options,
-        flag_iterator flags_begin,
-        flag_iterator flags_end) {
+        FlagIterator flags_begin,
+        FlagIterator flags_end) {
         return parse(argc, argv, number_of_arguments, options.begin(), options.end(), flags_begin, flags_end);
     }
     inline command parse(
