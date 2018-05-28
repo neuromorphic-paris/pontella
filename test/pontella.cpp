@@ -214,9 +214,7 @@ TEST_CASE("Test the main wrapper", "[main]") {
                 0,
                 {},
                 {},
-                [](pontella::command) {
-                    throw std::runtime_error("This program always errors");
-                })
+                [](pontella::command) { throw std::runtime_error("This program always errors"); })
             == 1);
     }
 }
