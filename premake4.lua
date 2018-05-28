@@ -1,7 +1,7 @@
 solution 'pontella'
     configurations {'release', 'debug'}
     location 'build'
-    project 'test'
+    project 'pontella'
         kind 'ConsoleApp'
         language 'C++'
         location 'build'
