@@ -2,7 +2,7 @@
 
 Pontella is a lightweight command line parser.
 
-# Install
+# install
 
 Within a Git repository, run the commands:
 
@@ -10,9 +10,10 @@ Within a Git repository, run the commands:
 mkdir -p third_party
 cd third_party
 git submodule add https://github.com/neuromorphic-paris/sepia.git
+git submodule update --init --recursive
 ```
 
-# User guide
+# user guide
 
 Assuming the command line `./program /path/to/file --help --verbose 1`, Pontella can be called as follows:
 ```cpp
@@ -204,21 +205,21 @@ namespace pontella {
 }
 ```
 
-# Contribute
+# contribute
 
-## Development dependencies
+## development dependencies
 
 Pontella relies on [Premake 4.x](https://github.com/premake/premake-4.x) (x ≥ 3) to generate build configurations. Follow these steps to install it:
-  - __Debian / Ubuntu__: Open a terminal and execute the command `sudo apt-get install premake4`.
-  - __OS X__: Open a terminal and execute the command `brew install premake`. If the command is not found, you need to install Homebrew first with the command<br />
+- __Debian / Ubuntu__: Open a terminal and execute the command `sudo apt-get install premake4`.
+- __macOS__: Open a terminal and execute the command `brew install premake`. If the command is not found, you need to install Homebrew first with the command<br />
   `ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`.
 
 [ClangFormat](https://clang.llvm.org/docs/ClangFormat.html) is used to unify coding styles. Follow these steps to install it:
-  - __Debian / Ubuntu__: Open a terminal and execute the command `sudo apt-get install clang-format`.
-  - __OS X__: Open a terminal and execute the command `brew install clang-format`. If the command is not found, you need to install Homebrew first with the command<br />
+- __Debian / Ubuntu__: Open a terminal and execute the command `sudo apt-get install clang-format`.
+- __macOS__: Open a terminal and execute the command `brew install clang-format`. If the command is not found, you need to install Homebrew first with the command<br />
   `ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`.
 
-## Test
+## test
 
 To test the library, run from the *pontella* directory:
 ```sh
@@ -226,7 +227,7 @@ premake4 gmake
 cd build
 make
 cd release
-./test
+./pontella
 ```
 
 After changing the code, format the source files by running from the *pontella* directory:
@@ -235,6 +236,6 @@ clang-format -i source/pontella.hpp
 clang-format -i test/pontella.cpp
 ```
 
-# License
+# license
 
 See the [LICENSE](LICENSE.txt) file for license rights and limitations (GNU GPLv3).
