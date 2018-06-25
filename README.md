@@ -229,6 +229,16 @@ If the command is not found, you need to install Homebrew first with the command
 ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
 
+### Windows
+
+Download and install:
+- [Visual Studio Community](https://visualstudio.microsoft.com/vs/community/). Select at least __Desktop development with C++__ when asked.
+- [git](https://git-scm.com)
+- [premake 4.x](https://premake.github.io/download.html). In order to use it from the command line, the *premake4.exe* executable must be copied to a directory in your path. After downloading and decompressing *premake-4.4-beta5-windows.zip*, run from the command line:
+  ```sh
+copy "%userprofile%\Downloads\premake-4.4-beta5-windows\premake4.exe" "%userprofile%\AppData\Local\Microsoft\WindowsApps"
+  ```
+
 ## test
 
 To test the library, run from the *pontella* directory:
@@ -240,11 +250,15 @@ cd release
 ./pontella
 ```
 
+__Windows__ users must run `premake4 vs2010` instead, and open the generated solution with Visual Studio.
+
 After changing the code, format the source files by running from the *pontella* directory:
 ```sh
 clang-format -i source/pontella.hpp
 clang-format -i test/pontella.cpp
 ```
+
+__Windows__ users must run *Edit* > *Advanced* > *Format Document* from the Visual Studio menu instead.
 
 # license
 
