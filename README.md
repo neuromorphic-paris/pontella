@@ -1,4 +1,4 @@
-![pontella](banner.png "The Pontella banner")
+![banner](banner.png)
 
 Pontella is a lightweight command line parser.
 
@@ -9,7 +9,7 @@ Within a Git repository, run the commands:
 ```sh
 mkdir -p third_party
 cd third_party
-git submodule add https://github.com/neuromorphic-paris/sepia.git
+git submodule add https://github.com/neuromorphic-paris/pontella.git
 git submodule update --init --recursive
 ```
 
