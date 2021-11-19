@@ -20,7 +20,7 @@ Assuming the command line `./program /path/to/file --help --verbose 1`, Pontella
 #include "../third_party/pontella/source/pontella.hpp"
 
 int main(int argc, char* argv[]) {
-    const auto command = pontella::parse(argc, argv, 1, {{"verbose", {"v"}}}, {"help", {"h"}});
+    const auto command = pontella::parse(argc, argv, 1, {{"verbose", {"v"}}}, {{"help", {"h"}}});
     return 0;
 }
 ```
@@ -172,9 +172,12 @@ int main(int argc, char* argv[]) {
         if (command.flags.find("help") != command.flags.end()) {
             show_help = true;
         } else {
-            const auto verbose = std::stoull(verboseCandidate->second);
-            if (verbose > 3) {
-                throw std::runtime_error("'verbose' must be in the range [0, 2]");
+            const auto name_and_argument = command.options.find("verbose");
+            if (name_and_argument != command.options.end()){
+                const auto verbose = std::stoull(name_and_argument->second);
+                if (verbose > 3) {
+                    throw std::runtime_error("'verbose' must be in the range [0, 2]");
+                }
             }
         }
     } catch (const std::runtime_error& exception) {
