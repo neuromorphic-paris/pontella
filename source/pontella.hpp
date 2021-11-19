@@ -162,14 +162,14 @@ namespace pontella {
                     command.flags.insert(name_and_is_option->first);
                 }
             } else {
-                if (number_of_arguments >= 0 && command.arguments.size() >= number_of_arguments) {
+                if (number_of_arguments >= 0 && static_cast<int64_t>(command.arguments.size()) >= number_of_arguments) {
                     throw std::runtime_error(
                         "Too many arguments (" + std::to_string(number_of_arguments) + " expected)");
                 }
                 command.arguments.push_back(element);
             }
         }
-        if (number_of_arguments >= 0 && command.arguments.size() < number_of_arguments) {
+        if (number_of_arguments >= 0 && static_cast<int64_t>(command.arguments.size()) < number_of_arguments) {
             throw std::runtime_error("Not enough arguments (" + std::to_string(number_of_arguments) + " expected)");
         }
         return command;
